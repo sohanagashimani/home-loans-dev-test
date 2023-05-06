@@ -17,8 +17,23 @@ export default function Home() {
       try {
         const response = await fetch(`/api/homeLoans?page=${currentPage}`);
         const data = await response.json();
-        setProducts(data.hits);
-        setPageCount(data.meta.pageCount);
+        const { hits } = data;
+        const uniqueProducts = [];
+
+        for (let i = 0; i < hits.length; i++) {
+          const product = hits[i];
+          const index = uniqueProducts.findIndex(
+            (p) => p.companySlug === product.companySlug
+          );
+          if (index === -1) {
+            uniqueProducts.push(product);
+          } else {
+            if (product.advertisedRate < uniqueProducts[index].advertisedRate) {
+              uniqueProducts[index] = product;
+            }
+          }
+        }
+        setProducts(uniqueProducts);
         setLoading(false);
       } catch (error) {
         console.log(error);
