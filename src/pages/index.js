@@ -34,6 +34,7 @@ export default function Home() {
           }
         }
         setProducts(uniqueProducts);
+        setPageCount(data.meta.pageCount);
         setLoading(false);
       } catch (error) {
         console.log(error);
